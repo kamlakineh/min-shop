@@ -193,8 +193,8 @@ export default function App() {
     phoneNumber: "",
     altPhoneNumber: "",
     email: "",
-    region: "Hawassa",
-    city: "Hawassa",
+    region: "Addis Ababa",
+    city: "Addis Ababa",
     subCity: "Bole",
     woreda: "03",
     houseNumber: "",
@@ -236,12 +236,6 @@ export default function App() {
   // INITIAL LOADERS (MOUNT)
   // ----------------------------------------------------
   useEffect(() => {
-    // Open direct paths like /admin when the app loads
-    const path = window.location.pathname.replace(/^\/+|\/+$/g, "");
-    if (path === "admin") {
-      setActivePage("admin");
-    }
-
     // Load local storage cart & favorites
     const savedCart = localStorage.getItem("ethiophone_cart");
     if (savedCart) {

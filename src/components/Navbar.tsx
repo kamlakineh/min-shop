@@ -22,6 +22,7 @@ interface NavbarProps {
   setSearchQuery: (query: string) => void;
   onSearchSubmit: (query: string) => void;
   logoText: string;
+  isAdmin: boolean;
 }
 
 export default function Navbar({
@@ -33,6 +34,7 @@ export default function Navbar({
   setSearchQuery,
   onSearchSubmit,
   logoText,
+  isAdmin,
 }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -121,6 +123,22 @@ export default function Navbar({
                 {item.label}
               </button>
             ))}
+
+            {/* Admin trigger */}
+            <button
+              onClick={() => setActivePage("admin")}
+              className={`text-xs font-mono font-bold px-2.5 py-1 transition-all flex items-center gap-1.5 shadow-sm hover:shadow border-none ${
+                activePage === "admin"
+                  ? "bg-blue-600 text-white"
+                  : isAdmin
+                    ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
+                    : "bg-black text-white hover:bg-blue-600"
+              }`}
+              id="nav-item-admin"
+            >
+              <ShieldAlert className="w-3.5 h-3.5" />
+              {isAdmin ? "DASHBOARD" : "ADMIN"}
+            </button>
           </nav>
 
           {/* Icons (Cart & Favorites) */}
@@ -216,6 +234,22 @@ export default function Navbar({
                 {item.label}
               </button>
             ))}
+
+            <button
+              onClick={() => {
+                setActivePage("admin");
+                setMobileMenuOpen(false);
+              }}
+              className={`text-left text-sm font-mono font-bold py-2.5 px-3 transition-colors flex items-center gap-1.5 ${
+                activePage === "admin"
+                  ? "bg-blue-600 text-white"
+                  : "text-black hover:bg-gray-50"
+              }`}
+              id="nav-item-mobile-admin"
+            >
+              <ShieldAlert className="w-4 h-4 text-blue-500" />
+              {isAdmin ? "ADMIN CONTROL PANEL" : "ADMIN SIGN IN"}
+            </button>
           </div>
         </div>
       )}
