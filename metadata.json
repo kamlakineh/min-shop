@@ -1,0 +1,6 @@
+{
+  "name": "Ethiopian Phone Shop",
+  "description": "Premium modern e-commerce platform for smartphones and mobile accessories in Ethiopia, featuring a fully-responsive flat UI, instant search, local cart and favorites, checkout with Chapa integration, order tracking, and a comprehensive admin dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,178 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Admin {
+  id           String @id @default(uuid())
+  username     String @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Brand {
+  id      String  @id @default(uuid())
+  name    String  @unique
+  logoUrl String?
+  phones  Phone[]
+}
+
+model Category {
+  id         String  @id @default(uuid())
+  name       String  @unique
+  isHidden   Boolean @default(false)
+  orderIndex Int     @default(0)
+  phones     Phone[]
+}
+
+model Phone {
+  id            String         @id @default(uuid())
+  name          String
+  brandId       String
+  brand         Brand          @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  categoryId    String
+  category      Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  model         String
+  price         Float
+  discount      Float          @default(0) // Percentage (e.g. 10 for 10% off)
+  stock         Int            @default(0)
+  description   String
+  warranty      String         @default("1 Year")
+  isFeatured    Boolean        @default(false)
+  isFlashSale   Boolean        @default(false)
+  videoUrl      String?
+  images        PhoneImage[]
+  variants      PhoneVariant[]
+  reviews       Review[]
+  orderItems    OrderItem[]
+  favorites     Favorite[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model PhoneImage {
+  id         String @id @default(uuid())
+  phoneId    String
+  phone      Phone  @relation(fields: [phoneId], references: [id], onDelete: Cascade)
+  url        String
+  orderIndex Int    @default(0)
+}
+
+model PhoneVariant {
+  id             String  @id @default(uuid())
+  phoneId        String
+  phone          Phone   @relation(fields: [phoneId], references: [id], onDelete: Cascade)
+  color          String
+  storage        String  // e.g., "128GB", "256GB"
+  ram            String  // e.g., "8GB", "12GB"
+  priceModifier  Float   @default(0) // Added to base price
+  stock          Int     @default(0)
+}
+
+model Order {
+  id               String      @id @default(uuid())
+  orderNumber      String      @unique
+  fullName         String
+  phoneNumber      String
+  altPhoneNumber   String?
+  email            String?
+  region           String
+  city             String
+  subCity          String
+  woreda           String
+  houseNumber      String?
+  deliveryAddress  String
+  deliveryNotes    String?
+  paymentMethod    String      // "chapa" | "cod" | "bank_transfer"
+  deliveryFee      Float       @default(0)
+  total            Float
+  status           String      @default("Pending") // "Pending", "Confirmed", "Preparing", "Ready", "Shipped", "Delivered", "Cancelled"
+  couponCode       String?
+  discountApplied  Float       @default(0)
+  items            OrderItem[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  phoneId   String
+  phone     Phone   @relation(fields: [phoneId], references: [id], onDelete: Cascade)
+  variantId String?
+  name      String  // Captured name in case product changes
+  color     String?
+  storage   String?
+  ram       String?
+  price     Float
+  quantity  Int     @default(1)
+}
+
+model Coupon {
+  id             String   @id @default(uuid())
+  code           String   @unique
+  type           String   // "percentage" | "fixed"
+  value          Float
+  expirationDate DateTime
+  usageLimit     Int      @default(0) // 0 means unlimited
+  usageCount     Int      @default(0)
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  phoneId   String
+  phone     Phone    @relation(fields: [phoneId], references: [id], onDelete: Cascade)
+  userName  String
+  rating    Int      // 1 to 5
+  comment   String
+  createdAt DateTime @default(now())
+}
+
+model Favorite {
+  id      String @id @default(uuid())
+  phoneId String
+  phone   Phone  @relation(fields: [phoneId], references: [id], onDelete: Cascade)
+  userId  String // stored local storage identifier
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  email     String?
+  message   String
+  createdAt DateTime @default(now())
+  isRead    Boolean  @default(false)
+}
+
+model Blog {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  category  String
+  imageUrl  String?
+  author    String   @default("Admin")
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  type      String   // "new_order" | "low_stock" | "contact_message"
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model WebsiteSetting {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String // JSON stringified configuration
+}
