@@ -1,6 +1,16 @@
 // src/components/Navbar.tsx
 import React, { useState } from "react";
-import { Search, ShoppingBag, Heart, Smartphone, Menu, X, ShieldAlert, BookOpen, Clock } from "lucide-react";
+import {
+  Search,
+  ShoppingBag,
+  Heart,
+  Smartphone,
+  Menu,
+  X,
+  ShieldAlert,
+  BookOpen,
+  Clock,
+} from "lucide-react";
 import { Phone } from "../types";
 
 interface NavbarProps {
@@ -12,7 +22,6 @@ interface NavbarProps {
   setSearchQuery: (query: string) => void;
   onSearchSubmit: (query: string) => void;
   logoText: string;
-  isAdmin: boolean;
 }
 
 export default function Navbar({
@@ -24,7 +33,6 @@ export default function Navbar({
   setSearchQuery,
   onSearchSubmit,
   logoText,
-  isAdmin,
 }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -60,8 +68,11 @@ export default function Navbar({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div 
-            onClick={() => { setActivePage("home"); setMobileMenuOpen(false); }} 
+          <div
+            onClick={() => {
+              setActivePage("home");
+              setMobileMenuOpen(false);
+            }}
             className="flex items-center gap-2 cursor-pointer"
             id="nav-logo-btn"
           >
@@ -101,8 +112,8 @@ export default function Navbar({
                 key={item.id}
                 onClick={() => setActivePage(item.id)}
                 className={`text-xs font-semibold tracking-wider font-sans transition-colors py-1 border-b-2 ${
-                  activePage === item.id 
-                    ? "border-blue-600 text-blue-600" 
+                  activePage === item.id
+                    ? "border-blue-600 text-blue-600"
                     : "border-transparent text-gray-800 hover:text-black hover:border-black"
                 }`}
                 id={`nav-item-${item.id}`}
@@ -110,22 +121,6 @@ export default function Navbar({
                 {item.label}
               </button>
             ))}
-            
-            {/* Admin trigger */}
-            <button
-              onClick={() => setActivePage("admin")}
-              className={`text-xs font-mono font-bold px-2.5 py-1 transition-all flex items-center gap-1.5 shadow-sm hover:shadow border-none ${
-                activePage === "admin"
-                  ? "bg-blue-600 text-white"
-                  : isAdmin
-                  ? "bg-blue-50 text-blue-600 hover:bg-blue-100"
-                  : "bg-black text-white hover:bg-blue-600"
-              }`}
-              id="nav-item-admin"
-            >
-              <ShieldAlert className="w-3.5 h-3.5" />
-              {isAdmin ? "DASHBOARD" : "ADMIN"}
-            </button>
           </nav>
 
           {/* Icons (Cart & Favorites) */}
@@ -137,7 +132,9 @@ export default function Navbar({
               title="Favorites"
               id="nav-favorites-btn"
             >
-              <Heart className={`w-5 h-5 ${favoritesCount > 0 ? "fill-red-500 text-red-500" : ""}`} />
+              <Heart
+                className={`w-5 h-5 ${favoritesCount > 0 ? "fill-red-500 text-red-500" : ""}`}
+              />
               {favoritesCount > 0 && (
                 <span className="absolute top-0.5 right-0.5 bg-black text-white text-[9px] font-mono font-bold w-4 h-4 flex items-center justify-center border border-white">
                   {favoritesCount}
@@ -166,7 +163,11 @@ export default function Navbar({
               className="lg:hidden p-2 text-black hover:bg-gray-100 transition-colors"
               id="nav-mobile-menu-toggle"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -206,8 +207,8 @@ export default function Navbar({
                   setMobileMenuOpen(false);
                 }}
                 className={`text-left text-sm font-semibold py-2.5 px-3 border-b border-gray-100 transition-colors ${
-                  activePage === item.id 
-                    ? "text-blue-600 bg-blue-50/50 pl-4 border-l-2 border-l-blue-600" 
+                  activePage === item.id
+                    ? "text-blue-600 bg-blue-50/50 pl-4 border-l-2 border-l-blue-600"
                     : "text-gray-800 hover:bg-gray-50"
                 }`}
                 id={`nav-item-mobile-${item.id}`}
@@ -215,22 +216,6 @@ export default function Navbar({
                 {item.label}
               </button>
             ))}
-            
-            <button
-              onClick={() => {
-                setActivePage("admin");
-                setMobileMenuOpen(false);
-              }}
-              className={`text-left text-sm font-mono font-bold py-2.5 px-3 transition-colors flex items-center gap-1.5 ${
-                activePage === "admin"
-                  ? "bg-blue-600 text-white"
-                  : "text-black hover:bg-gray-50"
-              }`}
-              id="nav-item-mobile-admin"
-            >
-              <ShieldAlert className="w-4 h-4 text-blue-500" />
-              {isAdmin ? "ADMIN CONTROL PANEL" : "ADMIN SIGN IN"}
-            </button>
           </div>
         </div>
       )}
